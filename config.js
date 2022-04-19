@@ -35,6 +35,7 @@ module.exports = {
     CSS: {
       buildPath: "dist/css/",
       transforms: [AttributeSetsTransform.name, NameKebabTransfom.name],
+      prefix: "spectrum",
       files: [
         {
           destination: "default-vars.css",
