@@ -8,24 +8,86 @@ StyleDictionary.registerTransform(NameKebabTransfom);
 StyleDictionary.registerTransform(AttributeSetsTransform);
 StyleDictionary.registerFormat(CSSSetsFormatter);
 
-const generateFileConfig = (subSystemName, setName) => {
+const systemNames = ['express', 'spectrum', 'wireframe'];
+
+const tokenAttributesHaveSets = (tokenAttributes) => {
+  return typeof tokenAttributes === "object" &&
+    !Array.isArray(tokenAttributes) &&
+    tokenAttributes !== null &&
+    "sets" in tokenAttributes;
+}
+
+const generateFileConfig = (setName, subSystemName) => {
   const sets = [setName, subSystemName];
+
+  const selectorMap = {
+    'desktop': 'medium',
+    'mobile': 'large'
+  };
+
+  const selector = selectorMap[setName] ?? setName;
   return {
-    destination: `${subSystemName}/${setName}-vars.css`,
+    destination: `${subSystemName}/${selector}-vars.css`,
     format: CSSSetsFormatter.name,
     filter: (token) => {
       return (
-        typeof token.attributes === "object" &&
-        !Array.isArray(token.attributes) &&
-        token.attributes !== null &&
-        "sets" in token.attributes &&
-        token.attributes.sets.some((element) => {
-          return sets.includes(element);
-        })
+        tokenAttributesHaveSets(token.attributes) &&
+        token.attributes.sets.includes(subSystemName) &&
+        token.attributes.sets.includes(setName)
       );
     },
     options: {
-      selector: `.spectrum--${setName}`,
+      selector: `.spectrum--${selector}`,
+      showFileHeader: false,
+      outputReferences: true,
+      sets
+    },
+  }
+};
+
+const generateGlobalConfig = (subSystemName) => {
+  const sets = [subSystemName];
+
+  return {
+    destination: `${subSystemName}/global-vars.css`,
+    format: CSSSetsFormatter.name,
+    filter: (token) => {
+      return (
+        tokenAttributesHaveSets(token.attributes) &&
+        token.attributes.sets.length === 1 &&
+        token.attributes.sets[0] === subSystemName
+      );
+    },
+    options: {
+      selector: `.spectrum`,
+      showFileHeader: false,
+      outputReferences: true,
+      sets
+    },
+  }
+}
+
+const generateGlobalSetConfig = (setName) => {
+  const sets = [setName];
+
+  const selectorMap = {
+    'desktop': 'medium',
+    'mobile': 'large'
+  };
+
+  const selector = selectorMap[setName] ?? setName;
+  return {
+    destination: `${selector}-vars.css`,
+    format: CSSSetsFormatter.name,
+    filter: (token) => {
+      return (
+        tokenAttributesHaveSets(token.attributes) &&
+        token.attributes.sets.every(set => !systemNames.includes(set)) &&
+        token.attributes.sets.includes(setName)
+      );
+    },
+    options: {
+      selector: `.spectrum--${selector}`,
       showFileHeader: false,
       outputReferences: true,
       sets
@@ -42,26 +104,36 @@ module.exports = {
       prefix: "spectrum",
       files: [
         {
-          destination: "default-vars.css",
+          destination: "global-vars.css",
           format: CSSSetsFormatter.name,
           filter: (token) => {
-            return !("sets" in token.attributes);
+            return !("sets" in token.attributes)
           },
           options: {
             showFileHeader: false,
             outputReferences: true,
+            selector: ".spectrum"
           },
         },
-        generateFileConfig("spectrum","desktop"),
-        generateFileConfig("spectrum","mobile"),
-        generateFileConfig("spectrum","light"),
-        generateFileConfig("spectrum","dark"),
-        generateFileConfig("spectrum","darkest"),
-        generateFileConfig("express","desktop"),
-        generateFileConfig("express","mobile"),
-        generateFileConfig("express","light"),
-        generateFileConfig("express","dark"),
-        generateFileConfig("express","darkest"),
+        generateGlobalSetConfig("desktop"),
+        generateGlobalSetConfig("mobile"),
+        generateGlobalSetConfig("light"),
+        generateGlobalSetConfig("dark"),
+        generateGlobalSetConfig("darkest"),
+
+        generateGlobalConfig("spectrum"),
+        generateFileConfig("desktop", "spectrum"),
+        generateFileConfig("mobile", "spectrum"),
+        generateFileConfig("light", "spectrum"),
+        generateFileConfig("dark", "spectrum"),
+        generateFileConfig("darkest", "spectrum"),
+
+        generateGlobalConfig("express"),
+        generateFileConfig("desktop", "express"),
+        generateFileConfig("mobile", "express"),
+        generateFileConfig("light", "express"),
+        generateFileConfig("dark", "express"),
+        generateFileConfig("darkest", "express"),
       ],
     },
   },
