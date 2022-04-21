@@ -9,6 +9,7 @@ StyleDictionary.registerTransform(AttributeSetsTransform);
 StyleDictionary.registerFormat(CSSSetsFormatter);
 
 const generateFileConfig = (subSystemName, setName) => {
+  const sets = [setName, subSystemName];
   return {
     destination: `${subSystemName}/${setName}-vars.css`,
     format: CSSSetsFormatter.name,
@@ -18,13 +19,15 @@ const generateFileConfig = (subSystemName, setName) => {
         !Array.isArray(token.attributes) &&
         token.attributes !== null &&
         "sets" in token.attributes &&
-        token.attributes.sets.includes(setName)
+        token.attributes.sets.some((element) => {
+          return sets.includes(element);
+        })
       );
     },
     options: {
       showFileHeader: false,
       outputReferences: true,
-      sets: [setName, subSystemName],
+      sets
     },
   }
 }
