@@ -22,6 +22,7 @@ const generateFileConfig = (subSystemName, setName) => {
       );
     },
     options: {
+      selector: `.spectrum--${setName}`,
       showFileHeader: false,
       outputReferences: true,
       sets: [setName, subSystemName],
