@@ -37,7 +37,7 @@ const generateFileConfig = (setName, subSystemName) => {
       );
     },
     options: {
-      selector: `.spectrum--${selector}`,
+      selector: `.spectrum--${subSystemName}.spectrum--${selector}`,
       showFileHeader: false,
       outputReferences: true,
       sets
@@ -59,7 +59,7 @@ const generateGlobalConfig = (subSystemName) => {
       );
     },
     options: {
-      selector: `.spectrum`,
+      selector: `.spectrum--${subSystemName}`,
       showFileHeader: false,
       outputReferences: true,
       sets
