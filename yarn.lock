@@ -270,10 +270,10 @@ snake-case@^3.0.4:
     dot-case "^3.0.4"
     tslib "^2.0.3"
 
-style-dictionary-sets@^1.4.0:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/style-dictionary-sets/-/style-dictionary-sets-1.4.0.tgz#5a25a280f69d37e75e9d798496f99024df39195f"
-  integrity sha512-SPAI1EWqyfzqITGBfTUuAFjL8itAeqRLu3XFQbtgZfUbNgCm7e5ya3WPiDue9L2Tf7/hb0779CHq6kDq1yNP8Q==
+style-dictionary-sets@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/style-dictionary-sets/-/style-dictionary-sets-1.4.1.tgz#d8c50179879b706e8b84d7707e4b0206acd27d4f"
+  integrity sha512-9t3E2YEE7kftvVAAnTP1MDQfBj6s2gU7Ox8mEsiQzXXkIOSm1qssthpMWjZ1Gv3cWSzyrAsBiiwnVgt6dM7OxA==
   dependencies:
     deepmerge "^4.2.2"
 
